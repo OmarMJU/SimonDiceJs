@@ -46,9 +46,8 @@ class Juego {
   }
 
   iluminarSecuencia() {
-    for (var i = 0; i < this.nivel; i++) {
-      var color = this.transformarNumeroColor(this.secuencia[i]);
-      this.iluminaColor(color);
+    for (let i = 0; i < this.nivel; i++) {
+      const color = this.transformarNumeroColor(this.secuencia[i]);
       setTimeout(() => this.iluminaColor(color), 1000 * i);
     }
   }
