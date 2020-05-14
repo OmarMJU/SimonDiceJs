@@ -4,7 +4,7 @@ const btnvioleta = document.getElementById("violeta");
 const btnnaranja = document.getElementById("naranja");
 const btnverde = document.getElementById("verde");
 const btnEmpezar = document.getElementById("btnEmpezar");
-const ULTIMO_NIVEL = 10;
+const ULTIMO_NIVEL = 3;
 
 /**
 * Clase del juego la cual contiene toda la lógica.
@@ -18,6 +18,7 @@ class Juego {
   * o propiedades.
   */
   constructor() {
+    this.inicializar = this.inicializar.bind(this);
     this.inicializar();
     this.generarSecuencia();
     setTimeout(this.siguienteNivel, 500);
@@ -141,14 +142,26 @@ class Juego {
         this.eliminarEventosClick();
 
         if (this.nivel === (ULTIMO_NIVEL + 1)) {
-          // GANO
+          this.ganoJuego();
         } else {
           setTimeout(this.siguienteNivel, 1000);
         }
       }
     } else {
-      // PERDIO EL HIJO/A DE SU PUTA MADRE
+      this.perdioJuego();
     }
+  }
+
+  ganoJuego() {
+    swal("FELICIDADES", "Has ganado el juego", "success").then(this.inicializar);
+  }
+
+  perdioJuego() {
+    swal("OH NO!", "No te ha dio muy bien hoy", "error")
+    .then(() => {
+      this.eliminarEventosClick();
+      this.inicializar();
+    });
   }
 }
 
