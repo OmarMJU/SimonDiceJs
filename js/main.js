@@ -4,6 +4,7 @@ const btnvioleta = document.getElementById("violeta");
 const btnnaranja = document.getElementById("naranja");
 const btnverde = document.getElementById("verde");
 const btnEmpezar = document.getElementById("btnEmpezar");
+const ULTIMO_NIVEL = 10;
 
 /**
 * Clase del juego la cual contiene toda la lógica.
@@ -19,13 +20,15 @@ class Juego {
   constructor() {
     this.inicializar();
     this.generarSecuencia();
-    this.siguienteNivel();
+    setTimeout(this.siguienteNivel, 500);
   }
 
   /**
   * Inicializa las propiedades necesarias para el juego.
   */
   inicializar() {
+    this.elegirColor = this.elegirColor.bind(this);
+    this.siguienteNivel = this.siguienteNivel.bind(this);
     btnEmpezar.classList.add("hide");
     this.generarSecuencia();
     this.nivel = 1;
@@ -43,14 +46,16 @@ class Juego {
   */
   generarSecuencia() {
     // Se puede declarar un atributo nuevo aunque en la clase no se espeficique.
-    this.secuencia = new Array(10).fill(0).map(num => Math.floor(Math.random() * 4));
+    this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(num => Math.floor(Math.random() * 4));
   }
 
   /**
   * Aumenta el nivel cada que el jugador logre superar el nivel anterior.
   */
   siguienteNivel() {
+    this.subNivel = 0;
     this.iluminarSecuencia();
+    this.agregarEventosClick();
   }
 
   /**
@@ -64,9 +69,22 @@ class Juego {
       case 1:
         return "btnvioleta";
       case 2:
-        return "btnvioleta";
+        return "btnnaranja";
       case 3:
         return "btnverde";
+    }
+  }
+
+  transformarColorNumero(color) {
+    switch (color) {
+      case "btnceleste":
+        return 0;
+      case "btnvioleta":
+        return 1;
+      case "btnnaranja":
+        return 2;
+      case "btnverde":
+        return 3;
     }
   }
 
@@ -94,6 +112,43 @@ class Juego {
   */
   apagaColor(color) {
     this.colores[color].classList.remove("light");
+  }
+
+  agregarEventosClick() {
+    this.colores.btnceleste.addEventListener("click", this.elegirColor);
+    this.colores.btnvioleta.addEventListener("click", this.elegirColor);
+    this.colores.btnnaranja.addEventListener("click", this.elegirColor);
+    this.colores.btnverde.addEventListener("click", this.elegirColor);
+  }
+
+  eliminarEventosClick() {
+    this.colores.btnceleste.removeEventListener("click", this.elegirColor);
+    this.colores.btnvioleta.removeEventListener("click", this.elegirColor);
+    this.colores.btnnaranja.removeEventListener("click", this.elegirColor);
+    this.colores.btnverde.removeEventListener("click", this.elegirColor);
+  }
+
+  elegirColor(evn) {
+    const nombreColor = "btn" + evn.target.dataset.color;
+    const numColor = this.transformarColorNumero(nombreColor);
+    this.iluminaColor(nombreColor);
+
+    if (numColor === this.secuencia[this.subNivel]) {
+      this.subNivel++;
+
+      if (this.subNivel === this.nivel) {
+        this.nivel++;
+        this.eliminarEventosClick();
+
+        if (this.nivel === (ULTIMO_NIVEL + 1)) {
+          // GANO
+        } else {
+          setTimeout(this.siguienteNivel, 1000);
+        }
+      }
+    } else {
+      // PERDIO EL HIJO/A DE SU PUTA MADRE
+    }
   }
 }
 
