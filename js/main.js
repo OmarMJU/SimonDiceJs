@@ -30,7 +30,7 @@ class Juego {
   inicializar() {
     this.elegirColor = this.elegirColor.bind(this);
     this.siguienteNivel = this.siguienteNivel.bind(this);
-    btnEmpezar.classList.add("hide");
+    this.toggleBotonInicio();
     this.generarSecuencia();
     this.nivel = 1;
     this.colores = {
@@ -39,6 +39,11 @@ class Juego {
       btnnaranja,
       btnverde
     }
+  }
+
+  toggleBotonInicio() {
+    if (btnEmpezar.classList.contains("hide")) btnEmpezar.classList.remove("hide");
+    else btnEmpezar.classList.add("hide");
   }
 
   /**
